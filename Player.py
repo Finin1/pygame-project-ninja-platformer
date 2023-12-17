@@ -48,7 +48,6 @@ if __name__ == '__main__':
 
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
-                    print('ss')
                     player.isJump = True
 
         sc.fill((0, 0, 0))
