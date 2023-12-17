@@ -1,6 +1,5 @@
 import pygame as pg
-
-
+from Bullet import Bullet
 # import Entity
 
 
@@ -11,16 +10,27 @@ class Player:
         self.body = None
         self.isJump = False
         self.jumpCount = 20
+        self.bullets = []
+        self.facing = 1
 
     def render(self):
         pg.draw.rect(sc, pg.Color('white'), (self.pos_x, self.pos_y, 50, 100))
+
+        for bullet in self.bullets:
+            if 0 < bullet.x < win_size[0]:
+                bullet.x += bullet.vel
+                bullet.render(sc)
+            else:
+                self.bullets.pop(self.bullets.index(bullet))
 
     def move(self, x=10, y=1):
         keys = pg.key.get_pressed()
         if keys[pg.K_a]:
             self.pos_x -= x
+            self.facing = -1
         elif keys[pg.K_d]:
             self.pos_x += x
+            self.facing = 1
 
     def jump(self):
         if self.isJump:
@@ -34,10 +44,15 @@ class Player:
                 self.isJump = False
                 self.jumpCount = 20
 
+    def shot(self):
+        if len(self.bullets) < 5:
+            self.bullets.append(Bullet(self.pos_x, self.pos_y, 10, (255, 0, 0), self.facing))
+
 
 if __name__ == '__main__':
     pg.init()
-    sc = pg.display.set_mode((1000, 900))
+    win_size = (1000, 900)
+    sc = pg.display.set_mode(win_size)
     run = True
     player = Player()
     clock = pg.time.Clock()
@@ -49,6 +64,8 @@ if __name__ == '__main__':
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     player.isJump = True
+                elif event.key == pg.K_f:
+                    player.shot()
 
         sc.fill((0, 0, 0))
         player.jump()
