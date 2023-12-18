@@ -7,14 +7,18 @@ class Player:
     def __init__(self, x=500, y=500):
         self.pos_x = x
         self.pos_y = y
+        self.width = 50
+        self.height = 100
+        
         self.body = None
         self.isJump = False
         self.jumpCount = 20
         self.bullets = []
         self.facing = 1
+        self.speed = 1
 
     def render(self):
-        pg.draw.rect(sc, pg.Color('white'), (self.pos_x, self.pos_y, 50, 100))
+        pg.draw.rect(sc, pg.Color('white'), (self.pos_x, self.pos_y, self.width, self.height))
 
         for bullet in self.bullets:
             if 0 < bullet.x < win_size[0]:
@@ -23,13 +27,13 @@ class Player:
             else:
                 self.bullets.pop(self.bullets.index(bullet))
 
-    def move(self, x=10, y=1):
+    def move(self, x=10):
         keys = pg.key.get_pressed()
         if keys[pg.K_a]:
-            self.pos_x -= x
+            self.pos_x -= x * self.speed
             self.facing = -1
         elif keys[pg.K_d]:
-            self.pos_x += x
+            self.pos_x += x * self.speed
             self.facing = 1
 
     def jump(self):
@@ -45,8 +49,10 @@ class Player:
                 self.jumpCount = 20
 
     def shot(self):
-        if len(self.bullets) < 5:
-            self.bullets.append(Bullet(self.pos_x, self.pos_y, 10, (255, 0, 0), self.facing))
+        self.bullets.append(Bullet(self.pos_x, self.pos_y + (self.height // 2), 10, (255, 0, 0), self.facing))
+
+    def lunge(self, x=300):
+        self.pos_x += x * self.facing
 
 
 if __name__ == '__main__':
@@ -66,6 +72,8 @@ if __name__ == '__main__':
                     player.isJump = True
                 elif event.key == pg.K_f:
                     player.shot()
+                elif event.key == pg.K_LSHIFT:
+                    player.lunge()
 
         sc.fill((0, 0, 0))
         player.jump()
