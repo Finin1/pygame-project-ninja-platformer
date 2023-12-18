@@ -19,7 +19,7 @@ class Entity():
         else:
             self.speed[1] = 0
 
-        test_entity.position = [test_entity.position[0] + test_entity.speed[0] / fps, test_entity.position[1] + test_entity.speed[1] / fps]
+        self.position = [self.position[0] + self.speed[0] / fps, self.position[1] + self.speed[1] / fps]
         rect = pygame.Rect(self.position[0], self.position[1], self.size[0], self.size[1])
         pygame.draw.rect(screen, pygame.Color('White'), rect=rect)
     
@@ -66,7 +66,7 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode(size)
     test_entity = Entity(10, [0, 0], (50, 50), [0, 0], 1)
     # test_entity2 = Entity(10, [100, 0], (50, 50), [0, 0], 1)
-    platforms = [pygame.Rect(0, 495, 500, 5), pygame.Rect(300, 450, 300, 2)]
+    platforms = [pygame.Rect(0, 495, 500, 5), pygame.Rect(300, 440, 300, 100)]
     # entities = [test_entity2]
     print(test_entity.speed)
     # print(test_entity2.position)
@@ -78,8 +78,9 @@ if __name__ == '__main__':
             if event.type == pygame.QUIT:
                 running = False
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                test_entity.speed[0] += 10
-                # test_entity.speed[1] += 10
+                # test_entity.speed[0] += 100
+                test_entity.position[1] -= 100
+                # test_entity.speed[1] += 100
         screen.fill((0, 0, 0))
         hitboxes = []
         # for entity in entities:
@@ -97,22 +98,26 @@ if __name__ == '__main__':
                 top_side = test_entity.position[1]
                 bottom_side = test_entity.position[1] + test_entity.size[1]
                 
-                if platform.top <= bottom_side:
+                if platform.top <= bottom_side and platform.bottom >= top_side:
                     modifier = abs(bottom_side - platform.top)
-                    test_entity.position[1] -= modifier
+                    test_entity.position[1] -= modifier - 1
                     test_entity.in_air = False
-                if platform.left >= right_side:
-                    modifier = abs(right_side - platform.left)
-                    test_entity.position[0] -= modifier
-                    test_entity.speed[0] = 0
-                if platform.right <= left_side:
+                
+                if platform.right >= left_side and platform.left >= right_side:
                     modifier = abs(left_side - platform.right)
-                    test_entity.position[0] -= modifier
+                    test_entity.position[0] += modifier
                     test_entity.speed[0] = 0
-                if platform.bottom >= top_side:
+                if platform.left <= right_side and platform.right <= left_side:
+                    modifier = abs(right_side - platform.left)
+                    test_entity.position[0] -= modifier 
+                    test_entity.speed[0] = 0
+                if platform.bottom >= top_side and platform.top >= bottom_side:
                     modifier = abs(top_side - platform.bottom)
                     test_entity.position[1] += modifier
                     test_entity.speed[1] = 0
+        else:
+            test_entity.is_in_air = True
+
         
         for platform in platforms:
             pygame.draw.rect(screen, pygame.Color('blue'), platform)
