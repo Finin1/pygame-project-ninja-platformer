@@ -40,7 +40,7 @@ class Player:  # класс Игрока
             self.pos_x += x * self.speed
             self.facing = 1
 
-        katana.render(self.pos_x + 30 + (self.width // 2 * self.facing), self.pos_y + (self.height // 2))
+        katana.render(self.pos_x + 30 + (self.width // 2 * self.facing), self.pos_y + (self.height // 2), self.facing)
 
     def jump(self):  # прыжок персонажа
         if self.isJump:
@@ -61,7 +61,7 @@ class Player:  # класс Игрока
         self.pos_x += x * self.facing
 
     def attack(self):
-        pass
+        katana.actived()
 
 
 def load_image(name):
@@ -84,7 +84,7 @@ if __name__ == '__main__':  # демонстрация работы класса
 
     all_sprites = pg.sprite.Group()
     sprite = pg.sprite.Sprite()
-    sprite.image = pg.transform.scale(load_image("katana.png"), (100, 121))
+    sprite.image = pg.transform.scale(load_image("katana.png"), (100, 120))
     sprite.rect = sprite.image.get_rect()
     all_sprites.add(sprite)
 
@@ -102,6 +102,8 @@ if __name__ == '__main__':  # демонстрация работы класса
                     player.shot()
                 elif event.key == pg.K_LSHIFT:
                     player.lunge()
+                elif event.key == pg.K_e:
+                    player.attack()
 
         sc.fill((0, 0, 0))
         player.jump()
