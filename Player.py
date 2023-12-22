@@ -40,7 +40,7 @@ class Player:  # класс Игрока
             self.pos_x += x * self.speed
             self.facing = 1
 
-        katana.render(self.pos_x, self.pos_y)
+        katana.render(self.pos_x + 30 + (self.width // 2 * self.facing), self.pos_y + (self.height // 2))
 
     def jump(self):  # прыжок персонажа
         if self.isJump:
