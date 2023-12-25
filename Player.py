@@ -90,11 +90,11 @@ if __name__ == '__main__':  # Демонстрация работы класса
 
     all_sprites = pg.sprite.Group()
     sprite = pg.sprite.Sprite()
-    sprite.image = pg.transform.scale(load_image("katana.png"), (100, 120))
+    sprite.image = pg.transform.scale(load_image("katana_start_pos.png"), (150, 150))
     sprite.rect = sprite.image.get_rect()
     all_sprites.add(sprite)
 
-    katana = Katana(player.pos_x, player.pos_y, sprite)
+    katana = Katana(sprite)
 
     jump = False
     while run:
@@ -112,7 +112,7 @@ if __name__ == '__main__':  # Демонстрация работы класса
                 elif event.key == pg.K_LSHIFT:
                     player.lunge()
                 elif event.key == pg.K_e:
-                    player.attack()
+                    katana.attack = True
 
         sc.fill((0, 0, 0))
         for platform in platforms:
