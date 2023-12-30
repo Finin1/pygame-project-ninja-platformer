@@ -1,16 +1,24 @@
 import pygame as pg
+# from weapon import Weapon
 
 
-class Bullet:  # класс, создающий пули
-    def __init__(self, x, y, radius, color, facing):  # получает положение по оси х и у, радиус, цвет, и сторону полёта
-        self.x = x
-        self.y = y
-        self.radius = radius
-        self.width = radius * 2
-        self.height = radius * 2
-        self.color = color
-        self.facing = facing
+class Bullet(pg.sprite.Sprite):  # класс, создающий пули
+
+    def __init__(self, x, y, image, facing, *group):  # получает положение по оси х и у, радиус, цвет, и сторону полёта
+        super().__init__(*group)
+        self.start_image = image
+        self.image = image
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
         self.vel = 50 * facing
 
-    def render(self, sc):  # тут объект рендерится
-        pg.draw.circle(sc, self.color, (self.x, self.y), self.radius)
+    def render(self):  # тут объект рендерится
+        self.rect.x += self.vel
+        if self.image == self.start_image:
+            self.image = pg.transform.rotate(self.image, 45)
+        else:
+            self.image = self.start_image
+
+    def finish_work(self):  # удаление спрайта
+        self.kill()
