@@ -30,19 +30,20 @@ class Player(Entity):  # Класс Игрока
                 bullet.finish_work()
 
     def move(self, x=10):  # Движение персонажа
-        keys = pg.key.get_pressed()
-        if keys[pg.K_a]:
-            self.is_collided['right'] = False
-            self.is_collided['left'] = False
-            self.speed_x = 1
-            self.pos_x -= x * self.speed_x
-            self.facing = -1
-        elif keys[pg.K_d]:
-            self.is_collided['right'] = False
-            self.is_collided['left'] = False
-            self.speed_x = 1
-            self.pos_x += x * self.speed_x
-            self.facing = 1
+        if not mouse[2]:
+            keys = pg.key.get_pressed()
+            if keys[pg.K_a]:
+                self.is_collided['right'] = False
+                self.is_collided['left'] = False
+                self.speed_x = 1
+                self.pos_x -= x * self.speed_x
+                self.facing = -1
+            elif keys[pg.K_d]:
+                self.is_collided['right'] = False
+                self.is_collided['left'] = False
+                self.speed_x = 1
+                self.pos_x += x * self.speed_x
+                self.facing = 1
 
         katana.render(self.pos_x + 30 + (self.width // 2 * self.facing), self.pos_y + (self.height // 2) + self.speed_y,
                       self.facing)
@@ -60,9 +61,11 @@ class Player(Entity):  # Класс Игрока
     #             self.jumpCount = 20
 
     def shot(self):  # выстрел персонажа
-        self.bullets.append(
-            Bullet(self.pos_x, self.pos_y + (self.height // 2) // 2, shuriken, self.facing,
-                   all_sprites))
+        if game_interface.total_shurikens > 0:
+            self.bullets.append(
+                Bullet(self.pos_x, self.pos_y + (self.height // 2) // 2, shuriken, self.facing, all_sprites))
+
+            game_interface.total_shurikens -= 1
 
     def lunge(self, x=300):  # Одна из механик игры, выпад
         self.pos_x += x * self.facing
@@ -89,8 +92,6 @@ if __name__ == '__main__':  # Демонстрация работы класса
     player = Player(sc, win_size, 50, [1, 0], 10)
     clock = pg.time.Clock()
 
-    game_interface = Interface(10, sc)
-
     platforms = [pg.Rect(0, 590, 100, 100), pg.Rect(150, 550, 5000, 100)]
 
     all_sprites = pg.sprite.Group()
@@ -100,6 +101,7 @@ if __name__ == '__main__':  # Демонстрация работы класса
     sprite.rect = sprite.image.get_rect()
     all_sprites.add(sprite)
 
+    game_interface = Interface(shuriken, 10, sc)
     katana = Katana(sprite)
 
     jump = False
@@ -115,12 +117,18 @@ if __name__ == '__main__':  # Демонстрация работы класса
                     jump = False
                 elif event.key == pg.K_f:
                     player.shot()
-                    print(len(player.bullets))
                 elif event.key == pg.K_LSHIFT:
                     player.lunge()
-                elif event.key == pg.K_e:
-                    katana.attack = True
-                    game_interface.hp -= 1
+                elif event.key == pg.K_e:  # тут можно испытать hp_bar
+                    game_interface.damage += 1
+
+        mouse = pg.mouse.get_pressed()
+        if mouse[0]:
+            katana.attack = True
+        if mouse[2]:
+            katana.can_defend = True
+        else:
+            katana.can_defend = False
 
         sc.fill((0, 0, 0))
         for platform in platforms:
