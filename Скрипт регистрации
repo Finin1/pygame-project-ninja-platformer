@@ -1,0 +1,43 @@
+import os
+
+
+while True:
+    print('''0 - выход из программы;
+    1 - регистрация;
+    2 - вход''')
+    n = input()
+    if n == '0':
+        break
+    elif n == '1':
+        login = input('Введите логин: ')
+        if os.path.isfile(f'{login}.txt'):
+            print('Это имя пользователя уже занято')
+            continue
+        else:
+            password = input('Введите пароль: ')
+            psw = input('Повтор пароля: ')
+            if password == psw:
+                mail = input('Адрес электронной почты:')
+                print('Регистрация успешно пройдена')
+                with open(f'{login}.txt', mode='w', encoding='utf8') as f:
+                    f.write(password + '\n')
+                    f.write(mail + '\n')
+            else:
+                print('Пароли не совпадают')
+                continue
+    elif n == '2':
+        login = input('Введите логин: ')
+        if os.path.isfile(f'{login}.txt'):
+            password = input('Введите пароль: ')
+            with open(f'{login}.txt', mode='r', encoding='utf8') as f:
+                psw = f.readline().rstrip('\n')
+            if password == psw:
+                print('Вы успешно вошли в аккаунт')
+            else:
+                print('Неверный пароль')
+                continue
+        else:
+            print('Аккаунта с таким логином не существует')
+            continue
+    else:
+        print('Неверный формат ввода')
