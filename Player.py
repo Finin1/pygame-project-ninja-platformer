@@ -76,7 +76,6 @@ def load_image(name):
     img = pg.image.load(fullname)
     return img
 
-
 if __name__ == '__main__':  # Демонстрация работы класса
     pg.init()
     win_size = (1000, 900)
