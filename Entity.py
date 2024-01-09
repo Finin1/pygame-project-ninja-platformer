@@ -73,21 +73,24 @@ class Entity():
                     self.speed_x = 0
 
     def get_hitbox(self):
-        hitbox = pygame.Rect(self.pos_x, self.pos_y, self.width, self.height)
+        hitbox = pygame.Rect(self.pos_x - 3, self.pos_y, self.width + 3, self.height)
         return hitbox
     
-    def check_gravity(self, objects, jump=False): # Проверка гравитации 
-        # Проверка прыжок ли это
-        if jump and self.speed_y == 0:
+    def jump(self, obj):
+        if self.speed_y == 0:
             self.speed_y = -20
             self.pos_y += -2
         else:
-            for platform in objects:
-                big_rect = (self.gravity_rect.left, self.gravity_rect.top - 2000, self.gravity_rect.width, self.gravity_rect.height + 4000)
-                if platform.colliderect(big_rect): # Выбор платформы над которой сущность
-                    if platform.colliderect(self.gravity_rect): # Проверка стоит ли прямоугольник над платформой
-                        self.speed_y = 0
-                        self.pos_y = platform.top - self.height
-                    else:
-                        self.speed_y += self.accel
-                        self.pos_y += self.speed_y
+            self.check_gravity(obj)
+
+    def check_gravity(self, objects, jump=False): # Проверка гравитации 
+        # Проверка прыжок ли это
+        for platform in objects:
+            big_rect = (self.gravity_rect.left, self.gravity_rect.top - 2000, self.gravity_rect.width, self.gravity_rect.height + 4000)
+            if platform.colliderect(big_rect): # Выбор платформы над которой сущность
+                if platform.colliderect(self.gravity_rect): # Проверка стоит ли прямоугольник над платформой
+                    self.speed_y = 0
+                    self.pos_y = platform.top - self.height
+                else:
+                    self.speed_y += self.accel
+                    self.pos_y += self.speed_y

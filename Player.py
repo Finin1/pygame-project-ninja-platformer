@@ -45,18 +45,6 @@ class Player(Entity):  # Класс Игрока
 
         katana.render(self.pos_x + 30 + (self.width // 2 * self.facing), self.pos_y + (self.height // 2) + self.speed_y, self.facing)
 
-    # def jump(self):  # прыжок персонажа
-    #     if self.isJump:
-    #         if self.jumpCount >= -20:
-    #             neg = 1
-    #             if self.jumpCount < 0:
-    #                 neg = -1
-    #             self.pos_y -= self.jumpCount ** 2 * 0.1 * neg
-    #             self.jumpCount -= 1
-    #         else:
-    #             self.isJump = False
-    #             self.jumpCount = 20
-
     def shot(self):  # выстрел персонажа
         self.bullets.append(Bullet(self.pos_x, self.pos_y + (self.height // 2) + self.speed_y, 10, (255, 0, 0), self.facing))
 
@@ -94,17 +82,14 @@ if __name__ == '__main__':  # Демонстрация работы класса
 
     katana = Katana(sprite)
 
-    jump = False
     while run:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 run = False
 
             elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_SPACE and not jump:
-                    jump = True
-                    player.check_gravity(platforms, True)
-                    jump = False
+                if event.key == pg.K_SPACE:
+                    player.jump(platforms)
                 elif event.key == pg.K_f:
                     player.shot()                 
                 elif event.key == pg.K_LSHIFT:
