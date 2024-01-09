@@ -7,7 +7,6 @@ from Entity import Entity
 from Katana import Katana
 
 
-
 class Player(Entity):  # Класс Игрока
     def __init__(self, screen, win, health, speed: list, mass, pos=[500, 500], size=[50, 100]):  # инициализация класса
         super().__init__(health, pos, size, speed, mass)
