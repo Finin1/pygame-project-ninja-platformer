@@ -9,9 +9,14 @@ class Katana:  # класс катаны
         self.center_pos = self.sprite.image.get_rect(center=(self.sprite.rect.x, self.sprite.rect.y))
         self.facing = 1
         self.original_image = sprite.image
+        self.def_img = pg.transform.rotate(pg.transform.flip(self.sprite.image, True, True), -90)
+
+        self.attack_img = pg.transform.scale(pg.image.load(path.join('data\images\katana_attack.png')), (155, 30))
+
         self.sprite.rect = self.sprite.image.get_rect(center=(self.sprite.rect.x, self.sprite.rect.y))
         self.attack = False
         self.attackCount = 20
+        self.can_defend = True
 
     def render(self, x, y, face):  # тут происходит рендер катаны
         self.sprite.rect.x = x
@@ -21,12 +26,17 @@ class Katana:  # класс катаны
             self.sprite.image = pg.transform.flip(self.sprite.image, True, False)
             self.facing *= -1
 
+        self.defend()
+
         if self.attack:
-            fullname = path.join('data\images\katana_attack.png')
-            self.sprite.image = pg.transform.scale(pg.image.load(fullname), (155, 30))
+            if self.sprite.image != self.attack_img:
+                self.sprite.image = self.attack_img
             self.actived()
 
         self.sprite.rect = self.sprite.image.get_rect(center=(self.sprite.rect.x, self.sprite.rect.y))
+
+        if self.facing == -1:
+            self.sprite.image = pg.transform.flip(self.sprite.image, True, False)
 
     def actived(self):  # этот метод отвечает за удар меча
         if self.attackCount >= -20:
@@ -40,5 +50,10 @@ class Katana:  # класс катаны
             self.sprite.image = self.original_image
             self.attack = False
 
-        if self.facing == -1:
-            self.sprite.image = pg.transform.flip(self.sprite.image, True, False)
+    def defend(self):
+        if not self.attack and self.can_defend:
+            self.sprite.image = self.def_img
+
+        if not self.can_defend:
+            self.can_defend = True
+            self.sprite.image = self.original_image
