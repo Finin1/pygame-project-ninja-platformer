@@ -2,10 +2,10 @@ import pygame as pg
 from Bullet import Bullet
 from os import path
 from sys import exit
-
+from load_images import load_image
 from Entity import Entity
 from Katana import Katana
-from interface import Interface
+from Interface import Interface
 
 
 class Player(Entity):  # Класс Игрока
@@ -18,6 +18,7 @@ class Player(Entity):  # Класс Игрока
         self.jumpCount = 20
         self.bullets = []
         self.facing = 1
+        self.mouse = pg.mouse.get_pressed()
 
     def render(self, objects):  # Отрисовка персонажа и пуль
         super().render(self, objects)
@@ -30,7 +31,7 @@ class Player(Entity):  # Класс Игрока
                 bullet.finish_work()
 
     def move(self, x=10):  # Движение персонажа
-        if not mouse[2]:
+        if not self.mouse[2]:
             keys = pg.key.get_pressed()
             if keys[pg.K_a]:
                 self.is_collided['right'] = False
@@ -47,7 +48,7 @@ class Player(Entity):  # Класс Игрока
 
         self.katana.render(self.pos_x + 30 + (self.width // 2 * self.facing), self.pos_y + (self.height // 2) + self.speed_y, self.facing)
 
-    def shot(self):  # выстрел персонажа
+    def shot(self, game_interface, shuriken, all_sprites):  # выстрел персонажа
         if game_interface.total_shurikens > 0:
             self.bullets.append(
                 Bullet(self.pos_x, self.pos_y + (self.height // 2) // 2, shuriken, self.facing, all_sprites))
