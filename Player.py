@@ -43,66 +43,71 @@ class Player(Entity):  # Класс Игрока
             self.pos_x += x * self.speed_x
             self.facing = 1
 
-        katana.render(self.pos_x + 30 + (self.width // 2 * self.facing), self.pos_y + (self.height // 2) + self.speed_y, self.facing)
+        self.katana.render(self.pos_x + 30 + (self.width // 2 * self.facing), self.pos_y + (self.height // 2) + self.speed_y, self.facing)
 
-    def shot(self):  # выстрел персонажа
+    def shot(self):  # Выстрел персонажа
         self.bullets.append(Bullet(self.pos_x, self.pos_y + (self.height // 2) + self.speed_y, 10, (255, 0, 0), self.facing))
 
     def lunge(self, x=300):  # Одна из механик игры, выпад
         self.pos_x += x * self.facing
 
     def attack(self):
-        katana.actived()
+        self.katana.actived()
 
+    def load_sprites(self, sprite):
+        self.katana = Katana(sprite)
 
-def load_image(name):
-    fullname = path.join('data\images', name)
-    # Если файл не существует, то выходим
-    if not path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        exit()
-    img = pg.image.load(fullname)
-    return img
+    def get_katana(self):
+        return self.katana
 
-if __name__ == '__main__':  # Демонстрация работы класса
-    pg.init()
-    win_size = (1000, 900)
-    sc = pg.display.set_mode(win_size)
-    run = True
-    player = Player(sc, win_size, 50, [1, 0], 10)
-    clock = pg.time.Clock()
+# def load_image(name):
+#     fullname = path.join('data\images', name)
+#     # Если файл не существует, то выходим
+#     if not path.isfile(fullname):
+#         print(f"Файл с изображением '{fullname}' не найден")
+#         exit()
+#     img = pg.image.load(fullname)
+#     return img
 
-    platforms = [pg.Rect(0, 500, 100, 100), pg.Rect(0, 550, 5000, 100)]
+# if __name__ == '__main__':  # Демонстрация работы класса
+#     pg.init()
+#     win_size = (1000, 900)
+#     sc = pg.display.set_mode(win_size)
+#     run = True
+#     player = Player(sc, win_size, 50, [1, 0], 10)
+#     clock = pg.time.Clock()
 
-    all_sprites = pg.sprite.Group()
-    sprite = pg.sprite.Sprite()
-    sprite.image = pg.transform.scale(load_image("katana_start_pos.png"), (150, 150))
-    sprite.rect = sprite.image.get_rect()
-    all_sprites.add(sprite)
+#     platforms = [pg.Rect(0, 500, 100, 100), pg.Rect(0, 550, 5000, 100)]
 
-    katana = Katana(sprite)
+#     all_sprites = pg.sprite.Group()
+#     sprite = pg.sprite.Sprite()
+#     sprite.image = pg.transform.scale(load_image("katana_start_pos.png"), (150, 150))
+#     sprite.rect = sprite.image.get_rect()
+#     all_sprites.add(sprite)
 
-    while run:
-        for event in pg.event.get():
-            if event.type == pg.QUIT:
-                run = False
+#     katana = Katana(sprite)
 
-            elif event.type == pg.KEYDOWN:
-                if event.key == pg.K_SPACE:
-                    player.jump(platforms)
-                elif event.key == pg.K_f:
-                    player.shot()                 
-                elif event.key == pg.K_LSHIFT:
-                    player.lunge()
-                elif event.key == pg.K_e:
-                    katana.attack = True
+#     while run:
+#         for event in pg.event.get():
+#             if event.type == pg.QUIT:
+#                 run = False
 
-        sc.fill((0, 0, 0))
-        for platform in platforms:
-            pg.draw.rect(sc, pg.Color('blue'), platform)
+#             elif event.type == pg.KEYDOWN:
+#                 if event.key == pg.K_SPACE:
+#                     player.jump(platforms)
+#                 elif event.key == pg.K_f:
+#                     player.shot()                 
+#                 elif event.key == pg.K_LSHIFT:
+#                     player.lunge()
+#                 elif event.key == pg.K_e:
+#                     katana.attack = True
 
-        player.move()
-        player.render(platforms)
-        all_sprites.draw(sc)
-        pg.display.flip()
-        clock.tick(30)
+#         sc.fill((0, 0, 0))
+#         for platform in platforms:
+#             pg.draw.rect(sc, pg.Color('blue'), platform)
+
+#         player.move()
+#         player.render(platforms)
+#         all_sprites.draw(sc)
+#         pg.display.flip()
+#         clock.tick(30)
