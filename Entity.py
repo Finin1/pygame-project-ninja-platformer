@@ -73,7 +73,7 @@ class Entity():
                     self.speed_x = 0
 
     def get_hitbox(self):
-        hitbox = pygame.Rect(self.pos_x - 3, self.pos_y, self.width + 3, self.height)
+        hitbox = pygame.Rect(self.pos_x, self.pos_y, self.width, self.height)
         return hitbox
     
     def jump(self, obj):

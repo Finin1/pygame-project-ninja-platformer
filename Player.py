@@ -72,7 +72,7 @@ if __name__ == '__main__':  # Демонстрация работы класса
     player = Player(sc, win_size, 50, [1, 0], 10)
     clock = pg.time.Clock()
 
-    platforms = [pg.Rect(0, 590, 100, 100), pg.Rect(150, 550, 5000, 100)]
+    platforms = [pg.Rect(0, 500, 100, 100), pg.Rect(0, 550, 5000, 100)]
 
     all_sprites = pg.sprite.Group()
     sprite = pg.sprite.Sprite()
