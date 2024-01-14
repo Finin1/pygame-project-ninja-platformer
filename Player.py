@@ -1,11 +1,10 @@
 import pygame as pg
 from Bullet import Bullet
-from os import path
-from sys import exit
-
+from load_images import load_image
 from Entity import Entity
 from Katana import Katana
 from interface import Interface
+from button import Button
 
 
 class Player(Entity):  # Класс Игрока
@@ -17,6 +16,8 @@ class Player(Entity):  # Класс Игрока
         self.isJump = False
         self.jumpCount = 20
         self.bullets = []
+        self.is_lunge = False
+        self.lungeCount = 0
         self.facing = 1
 
     def render(self, objects):  # Отрисовка персонажа и пуль
@@ -63,25 +64,29 @@ class Player(Entity):  # Класс Игрока
     def shot(self):  # выстрел персонажа
         if game_interface.total_shurikens > 0:
             self.bullets.append(
-                Bullet(self.pos_x, self.pos_y + (self.height // 2) // 2, shuriken, self.facing, all_sprites))
+                Bullet(self.pos_x, self.pos_y + (self.height // 2) // 2, shuriken, pg.transform.rotate(shuriken, 45),
+                       self.facing, all_sprites))
 
             game_interface.total_shurikens -= 1
 
-    def lunge(self, x=300):  # Одна из механик игры, выпад
-        self.pos_x += x * self.facing
+    def lunge(self):  # Одна из механик игры, выпад
+        if self.is_lunge:
+            if self.lungeCount < 5:
+                self.pos_x += 50 * self.facing
+                self.lungeCount += 1
+            else:
+                self.is_lunge = False
+                self.lungeCount = 0
 
-    def attack(self):
+    def attack(self):  # основная атака персонажа
         katana.actived()
 
-
-def load_image(name):
-    fullname = path.join('data\images', name)
-    # Если файл не существует, то выходим
-    if not path.isfile(fullname):
-        print(f"Файл с изображением '{fullname}' не найден")
-        exit()
-    img = pg.image.load(fullname)
-    return img
+    def super_attack(self):  # супер атака персонажа
+        if game_interface.can_super_attack:
+            self.bullets.append(
+                Bullet(self.pos_x, self.pos_y + (self.height // 2) // 2, super_attack_image_1, super_attack_image_2,
+                       self.facing, all_sprites))
+            game_interface.can_super_attack = False
 
 
 if __name__ == '__main__':  # Демонстрация работы класса
@@ -92,7 +97,8 @@ if __name__ == '__main__':  # Демонстрация работы класса
     player = Player(sc, win_size, 50, [1, 0], 10)
     clock = pg.time.Clock()
 
-    platforms = [pg.Rect(0, 590, 100, 100), pg.Rect(150, 550, 5000, 100)]
+    platforms = [pg.Rect(0, 590, 100, 100), pg.Rect(150, 550, 5000, 100), pg.Rect(600, 200, 100, 500),
+                 pg.Rect(700, 200, 100, 200), pg.Rect(600, 300, 100, 100), pg.Rect(700, 200, 100, 100)]
 
     all_sprites = pg.sprite.Group()
     shuriken = pg.transform.scale(load_image('shuriken.png'), (30, 30))
@@ -101,10 +107,17 @@ if __name__ == '__main__':  # Демонстрация работы класса
     sprite.rect = sprite.image.get_rect()
     all_sprites.add(sprite)
 
-    game_interface = Interface(shuriken, 10, sc)
+    super_attack_image_1 = load_image('super_attack_1.png')
+    super_attack_image_2 = load_image('super_attack_2.png')
+
+    game_interface = Interface(shuriken, 10, sc, super_attack_image_1)
     katana = Katana(sprite)
 
+    pause = Button(50, 50, (0, 0, 0))
+    znak = 'I I'
+
     jump = False
+    is_pause = True
     while run:
         for event in pg.event.get():
             if event.type == pg.QUIT or game_interface.hp <= 0:
@@ -118,25 +131,38 @@ if __name__ == '__main__':  # Демонстрация работы класса
                 elif event.key == pg.K_f:
                     player.shot()
                 elif event.key == pg.K_LSHIFT:
-                    player.lunge()
+                    player.is_lunge = True
                 elif event.key == pg.K_e:  # тут можно испытать hp_bar
                     game_interface.damage += 1
+                elif event.key == pg.K_q:
+                    player.super_attack()
+                elif event.key == pg.K_ESCAPE:
+                    is_pause = not is_pause
+                    if is_pause:
+                        znak = 'I I'
+                    else:
+                        znak = 'X'
 
-        mouse = pg.mouse.get_pressed()
-        if mouse[0]:
-            katana.attack = True
-        if mouse[2]:
-            katana.can_defend = True
-        else:
-            katana.can_defend = False
+        if is_pause:
+            mouse = pg.mouse.get_pressed()
+            if mouse[0]:
+                katana.attack = True
+            if mouse[2]:
+                katana.can_defend = True
+            else:
+                katana.can_defend = False
 
-        sc.fill((0, 0, 0))
-        for platform in platforms:
-            pg.draw.rect(sc, pg.Color('blue'), platform)
+            sc.fill((0, 0, 0))
+            for platform in platforms:
+                pg.draw.rect(sc, pg.Color('blue'), platform)
 
-        player.move()
-        game_interface.render()
-        player.render(platforms)
-        all_sprites.draw(sc)
+            player.move()
+            game_interface.render()
+            player.lunge()
+            player.render(platforms)
+            all_sprites.draw(sc)
+
+        pause.draw(950, 0, znak)
+
         pg.display.flip()
         clock.tick(30)
