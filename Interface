@@ -70,6 +70,3 @@ class Interface:  # класс, который рисует интерфейс �
                 if self.reload == 0:
                     self.can_super_attack = True
                     self.reload = 60
-
-    def pause(self):
-        pass
