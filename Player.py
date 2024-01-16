@@ -4,7 +4,7 @@ from load_images import load_image
 from Entity import Entity
 from Katana import Katana
 from interface import Interface
-from button import Button
+from pause_menu import PauseMenu
 
 
 class Player(Entity):  # Класс Игрока
@@ -113,11 +113,10 @@ if __name__ == '__main__':  # Демонстрация работы класса
     game_interface = Interface(shuriken, 10, sc, super_attack_image_1)
     katana = Katana(sprite)
 
-    pause = Button(50, 50, (0, 0, 0))
-    znak = 'I I'
+    pauseMenu = PauseMenu(win_size)
+    menu_image = pg.transform.scale(load_image('main_menu.jpg'), win_size)
 
     jump = False
-    is_pause = True
     while run:
         for event in pg.event.get():
             if event.type == pg.QUIT or game_interface.hp <= 0:
@@ -137,13 +136,9 @@ if __name__ == '__main__':  # Демонстрация работы класса
                 elif event.key == pg.K_q:
                     player.super_attack()
                 elif event.key == pg.K_ESCAPE:
-                    is_pause = not is_pause
-                    if is_pause:
-                        znak = 'I I'
-                    else:
-                        znak = 'X'
+                    pauseMenu.is_pause = not pauseMenu.is_pause
 
-        if is_pause:
+        if pauseMenu.is_pause:
             mouse = pg.mouse.get_pressed()
             if mouse[0]:
                 katana.attack = True
@@ -161,8 +156,9 @@ if __name__ == '__main__':  # Демонстрация работы класса
             player.lunge()
             player.render(platforms)
             all_sprites.draw(sc)
-
-        pause.draw(950, 0, znak)
+        else:
+            sc.blit(menu_image, (0, 0))
+            pauseMenu.render()
 
         pg.display.flip()
         clock.tick(30)
