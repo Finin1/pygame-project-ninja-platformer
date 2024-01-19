@@ -1,7 +1,7 @@
 import json
 import pygame
 from button import Button
-from save_stats import save_stat
+# from save_stats import save_stat
 from load_images import load_image
 from settings import clock, fps, font_type, name_file_stat
 
@@ -42,7 +42,7 @@ def stat():  # просмотр статистики
     screen = pygame.display.set_mode(size)
     fon = pygame.transform.scale(load_image('stat_menu.png'), (width, height))
 
-    save_stat("stat_opens")
+    # save_stat("stat_opens")
 
     with open(name_file_stat, mode='r') as stat_file:
         data = json.load(stat_file)

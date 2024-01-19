@@ -1,5 +1,5 @@
 import pygame
-from settings import screen, fon
+from settings import screen, font_type
 from load_images import load_image
 from menu import main_menu, stat, profile
 from Katana import Katana
@@ -11,7 +11,7 @@ from json import load
 
 pygame.init()
 
-next = main_menu(screen)
+next = main_menu()
 while True:  # ожидание действия
     if next == 'exit':
         exit()
@@ -47,11 +47,11 @@ while running:  # основной игровой процесс
     katana = Katana(sprite)
     mouse = pygame.mouse.get_pressed()
 
-    crate_rooms(all_sprites)
+    # crate_rooms(all_sprites)
     level = Level(2)
 
     pauseMenu = PauseMenu(win_size)
-    main_image = pygame.transform.scale(fon, win_size)
+    main_image = pygame.transform.scale(load_image('main_menu.jpg'), win_size)
     with open('data/settings.json', 'r', encoding='utf-8') as file:
         fps = load(file)["fps"]
 
