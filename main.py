@@ -72,6 +72,11 @@ while running:  # основной игровой процесс
             if level.next_level():
                 running = False
             player.pos_x = 0
+        elif player.pos_y + player.height >= win_size[1]:
+            player.pos_x = 0
+            player.pos_y = 500
+            game_interface.damage += 1
+            
         level.render_room(sc)
         player.move()
         game_interface.render()
