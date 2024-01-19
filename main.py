@@ -1,33 +1,37 @@
 import pygame
-from settings import screen, clock, fps, size
-from load_images import load_image
-from menu import main_menu, stat, profile
-from Entity import Entity
+from Level import Level
 from Player import Player
 from Interface import Interface
+from settings import clock, fps
+from save_stats import save_stat
+from menu import main_menu, stat
+from load_images import load_image
 
 pygame.init()
 
+
+save_stat("starts")
+
 while True:  # ожидание действия
-    next = main_menu(screen)
+    next = main_menu()
     if next == 'exit':
         exit()
     elif next == 'stat':
-        stat(screen)
-    elif next == 'profile':
-        profile(screen)
+        stat()
     else:
         break
 
 running = True
 while running:  # основной игровой процесс
-    pygame.init()
-    win_size = size
+    save_stat("game_starts")
+
+    win_size = 1600, 900
     sc = pygame.display.set_mode(win_size)
     run = True
     player = Player(sc, win_size, 50, [1, 0], 10)
-    clock = pygame.time.Clock()
-
+    
+    level = Level(2)
+    
     platforms = [pygame.Rect(0, 590, 100, 100), pygame.Rect(150, 550, 5000, 100)]
 
     all_sprites = pygame.sprite.Group()
@@ -65,13 +69,14 @@ while running:  # основной игровой процесс
         else:
             katana.can_defend = False
 
-        sc.fill((0, 0, 0))
-        for platform in platforms:
-            pygame.draw.rect(sc, pygame.Color('blue'), platform)
-
+        if player.pos_x + player.width >= win_size[0]:
+            if level.next_level():
+                running = False
+            player.pos_x = 0
+        level.render_room(sc)
         player.move()
         game_interface.render()
-        player.render(platforms)
+        player.render(level.get_platforms())
         all_sprites.draw(sc)
         pygame.display.flip()
-        clock.tick(30)
+        clock.tick(fps)
