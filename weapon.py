@@ -1,6 +1,6 @@
+import Bullet
 import pygame as pg
 from Player import Player
-import Bullet
 
 
 class Weapon:
