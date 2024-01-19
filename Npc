@@ -1,0 +1,59 @@
+import pygame as pg
+import random
+
+import pygame.event
+
+
+class Npc(pg.sprite.Sprite):
+    def __init__(self, botSpeed, bot_x, bot_y, bot_width, bot_height):
+        self.botSpeed = 5
+        self.bot_x = 900
+        self.bot_y = 400
+        self.bot_width = 30
+        self.bot_height = 40
+        self.bot_tm = pg.USEREVENT + 1
+
+    bot = pg.image.load('data\images\ghost.jpg')
+    bot_tm = pg.USEREVENT + 1
+    pg.time.set_timer(bot_tm, 7000)
+    bot_tm1 = []
+    bot_rect = bot.get_rect(topleft=(900, 400))
+
+    def __init__(self, botSpeed, bot_x, bot_y, bot_width, bot_height):
+        self.botSpeed = 5
+        self.bot_x = 900
+        self.bot_y = 400
+        self.bot_width = 30
+        self.bot_height = 40
+        self.bot_tm = pg.USEREVENT + 1
+
+    def fight(self):
+        min_dist = 200
+
+        player_x = 300
+        player_y = 300
+
+        player_x_change = 0
+        player_y_change = 0
+
+        player_x += player_x_change
+        player_y += player_y_change
+
+        delta_x = player_x - self.bot_x
+        delta_y = player_y - self.bot_y
+
+        if abs(delta_x) <= min_dist and abs(delta_y) <= min_dist:
+            bot_move_x = abs(delta_x) > abs(delta_y)
+            if abs(delta_x) > self.botSpeed and abs(delta_x) > self.botSpeed:
+                bot_move_x = random.random() < 0.5
+            if bot_move_x:
+                self.bot_x += min(delta_x, self.botSpeed) if delta_x > 0 else max(delta_x, -self.botSpeed)
+            else:
+                self.bot_y += min(delta_y, self.botSpeed) if delta_y > 0 else max(delta_y, -self.botSpeed)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+            pygame.quit()
+        if event.type == bot_tm:
+            bot_tm1 = [].append(bot.get_rect(topleft=(900, 400)))
