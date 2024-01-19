@@ -1,5 +1,5 @@
 import pygame
-from settings import screen, font_type
+from settings import font_type
 
 
 class Button:  # кнопка
@@ -9,7 +9,7 @@ class Button:  # кнопка
         self.color = color
         self.action = False
 
-    def draw(self, x, y, message):
+    def draw(self, screen, x, y, message):
         mouse = pygame.mouse.get_pos()  # мышка
         click = pygame.mouse.get_pressed()  # отслеживание клика
         pygame.draw.rect(screen, self.color, (x, y, self.width, self.height))  # рисование кнопки
