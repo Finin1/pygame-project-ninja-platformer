@@ -1,15 +1,13 @@
 import pygame as pg
 from Bullet import Bullet
-from os import path
-from sys import exit
-from load_images import load_image
 from Entity import Entity
 from Katana import Katana
 from Interface import Interface
+from load_images import load_image
 
 
 class Player(Entity):  # Класс Игрока
-    def __init__(self, screen, win, health, speed: list, mass, pos=[500, 500], size=[50, 100]):  # инициализация класса
+    def __init__(self, screen, win, health, speed: list, mass, pos=[5, 500], size=[50, 100]):  # инициализация класса
         super().__init__(health, pos, size, speed, mass)
         self.screen = screen
         self.win_size = win
