@@ -1,7 +1,6 @@
 import pygame
-from settings import screen, font_type
 from load_images import load_image
-from menu import main_menu, stat, profile
+from menu import main_menu, stat
 from Katana import Katana
 from Player import Player
 from Level import Level
@@ -16,11 +15,10 @@ while True:  # ожидание действия
     if next == 'exit':
         exit()
     elif next == 'stat':
-        stat(screen)
-    elif next == 'profile':
-        profile(screen)
+        stat()
     else:
         break
+    next = main_menu()
 
 running = True
 while running:  # основной игровой процесс
@@ -40,10 +38,8 @@ while running:  # основной игровой процесс
     sprite.image = pygame.transform.scale(load_image("katana_start_pos.png"), (150, 150))
     sprite.rect = sprite.image.get_rect()
     all_sprites.add(sprite)
-    super_attack_image_1 = load_image('super_attack_1.png')
-    super_attack_image_2 = load_image('super_attack_2.png')
 
-    game_interface = Interface(shuriken, 10, sc, super_attack_image_1)
+    game_interface = Interface(shuriken, 10, sc)
     katana = Katana(sprite)
     mouse = pygame.mouse.get_pressed()
 
