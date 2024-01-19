@@ -1,33 +1,34 @@
 import pygame
-from settings import screen, clock, fps, size
-from load_images import load_image
-from menu import main_menu, stat, profile
-from Entity import Entity
+from Level import Level
 from Player import Player
 from Interface import Interface
-from Level import Level
+from settings import clock, fps
+from save_stats import save_stat
+from menu import main_menu, stat
+from load_images import load_image
 
 pygame.init()
 
+
+save_stat("starts")
+
 while True:  # ожидание действия
-    next = main_menu(screen)
+    next = main_menu()
     if next == 'exit':
         exit()
     elif next == 'stat':
-        stat(screen)
-    elif next == 'profile':
-        profile(screen)
+        stat()
     else:
         break
 
 running = True
 while running:  # основной игровой процесс
-    pygame.init()
+    save_stat("game_starts")
+
     win_size = 1600, 900
     sc = pygame.display.set_mode(win_size)
     run = True
     player = Player(sc, win_size, 50, [1, 0], 10)
-    clock = pygame.time.Clock()
     
     level = Level(2)
     
@@ -78,4 +79,4 @@ while running:  # основной игровой процесс
         player.render(level.get_platforms())
         all_sprites.draw(sc)
         pygame.display.flip()
-        clock.tick(30)
+        clock.tick(fps)
