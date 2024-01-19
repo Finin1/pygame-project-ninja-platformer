@@ -9,7 +9,7 @@ from Interface import Interface
 
 
 class Player(Entity):  # Класс Игрока
-    def __init__(self, screen, win, health, speed: list, mass, pos=[500, 500], size=[50, 100]):  # инициализация класса
+    def __init__(self, screen, win, health, speed: list, mass, pos=[5, 500], size=[50, 100]):  # инициализация класса
         super().__init__(health, pos, size, speed, mass)
         self.screen = screen
         self.win_size = win
