@@ -23,8 +23,8 @@ class Entity:
             self.is_alive = False
 
         self.gravity_rect = pygame.Rect(self.pos_x, self.pos_y + self.height, self.width, 1)
-
-        # pygame.draw.rect(self.screen, pygame.Color('Red'), self.gravity_rect) # Отрисовка для тестов
+        
+        # pygame.draw.rect(self.screen, pygame.Color('Red'), self.test_rect) # Отрисовка для тестов
 
         self.check_gravity(objects)
         self.check_collision(objects)

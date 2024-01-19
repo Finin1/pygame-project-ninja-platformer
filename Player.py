@@ -6,7 +6,7 @@ from Katana import Katana
 
 class Player(Entity):  # Класс Игрока
 
-    def __init__(self, screen, win, health, katana_sprite, face, speed: list, mass, pos=[200, 500], size=[50, 100]):
+    def __init__(self, screen, win, health, katana_sprite, face, speed: list, mass, pos=[5, 500], size=[50, 100]):
         # инициализация класса
         super().__init__(health, pos, size, speed, mass)
         self.screen = screen

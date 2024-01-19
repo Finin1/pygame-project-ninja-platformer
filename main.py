@@ -4,8 +4,8 @@ from load_images import load_image
 from menu import main_menu, stat, profile
 from Katana import Katana
 from Player import Player
-from interface import Interface
-from Level import Level, crate_rooms
+from Level import Level
+from Interface import Interface
 from pause_menu import PauseMenu
 from json import load
 
@@ -29,7 +29,9 @@ while running:  # основной игровой процесс
     sc = pygame.display.set_mode(win_size)
     run = True
     clock = pygame.time.Clock()
-
+    
+    level = Level(2)
+    
     platforms = [pygame.Rect(0, 590, 100, 100), pygame.Rect(150, 550, 5000, 100)]
 
     all_sprites = pygame.sprite.Group()
